@@ -1,8 +1,10 @@
 ### RLs: Reinforcement Learning Algorithms in Gaming-Like Style
 
+This repository demonstrates the application of Reinforcement Learning (RL) algorithms in gaming-like scenarios, making learning RL intuitive, practical, and engaging.
+
 <!--This repository demonstrates the application of Reinforcement Learning (RL) algorithms in gaming-like scenarios, making learning RL intuitive, practical, and engaging. Whether you’re a beginner exploring RL concepts or an experienced researcher, this project serves as an interactive playground to understand, implement, and visualize RL techniques in a gaming framework.-->
 
-### Features
+<!-- ### Features
 -	Interactive Gaming Environments: Test RL algorithms in dynamic, gaming-style simulations.
 -	Pre-implemented RL Algorithms:
     -	Q-Learning
@@ -12,7 +14,7 @@
     -	Proximal Policy Optimization (PPO)
     -	Customizable Environments: Easily modify or create new gaming scenarios for experimentation.
     -	Visualization: Track agent learning progress with rich visualizations and performance metrics.
-    -	Modular Design: Well-organized and modular code for ease of understanding and contribution.
+    -	Modular Design: Well-organized and modular code for ease of understanding and contribution. -->
 
 ### Project Structure
 ```
