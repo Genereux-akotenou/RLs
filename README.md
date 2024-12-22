@@ -15,6 +15,7 @@
     -	Modular Design: Well-organized and modular code for ease of understanding and contribution.
 
 ### Project Structure
+```
 RLs/
 ├── environments/        # Prebuilt gaming-style RL environments
 ├── algorithms/          # Core RL algorithms (Q-Learning, PPO, etc.)
@@ -22,6 +23,7 @@ RLs/
 ├── utils/               # Helper functions for metrics, visualization, etc.
 ├── tests/               # Test scripts for validation
 └── main.py              # Main entry point for running experiments
+```
 
 ### Installation
 ```bash
