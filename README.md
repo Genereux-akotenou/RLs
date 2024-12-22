@@ -1,6 +1,6 @@
 ### RLs: Reinforcement Learning Algorithms in Gaming-Like Style
 
-This repository demonstrates the application of Reinforcement Learning (RL) algorithms in gaming-like scenarios, making learning RL intuitive, practical, and engaging. Whether you’re a beginner exploring RL concepts or an experienced researcher, this project serves as an interactive playground to understand, implement, and visualize RL techniques in a gaming framework.
+<!--This repository demonstrates the application of Reinforcement Learning (RL) algorithms in gaming-like scenarios, making learning RL intuitive, practical, and engaging. Whether you’re a beginner exploring RL concepts or an experienced researcher, this project serves as an interactive playground to understand, implement, and visualize RL techniques in a gaming framework.-->
 
 ### Features
 -	Interactive Gaming Environments: Test RL algorithms in dynamic, gaming-style simulations.
@@ -25,8 +25,8 @@ RLs/
 
 ### Installation
 ```bash
-git clone https://github.com/<your-username>/<your-repo-name>.git
-cd <your-repo-name>
+git clone https://github.com/Genereux-akotenou/RLs.git
+cd RLs
 pip install -r requirements.txt
 ```
 
@@ -71,6 +71,4 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 
 ### Contact
 For questions or suggestions, feel free to reach out:
--	Author: Your Name
--	Email: your.email@example.com
--	GitHub: Your Username
+-	Email: Mahouzonssou.AKOTENOU@um6p.ma
