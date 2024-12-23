@@ -1,1 +1,1 @@
-from DQN import *
+from .DQN.agent import *
