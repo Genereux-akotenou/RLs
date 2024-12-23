@@ -1,5 +1,5 @@
 import argparse
-from environments import FrozenLake
+from environments import FrozenLake, CartPole
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train or test reinforcement learning models.")
@@ -15,31 +15,43 @@ if __name__ == "__main__":
     parser.add_argument("--test_episodes", type=int, default=3, help="Number of episodes for testing")
     parser.add_argument("--is_slippery", action="store_true", help="Enable slippery mode")
     parser.add_argument("--render_mode", type=str, default="human", help="Rendering mode, e.g., 'human', 'rgb_array'")
+    parser.add_argument("--verbose", type=str, default="1", choices=["0", "1"], help="Display logs")
+
     args = parser.parse_args()
 
     # ------------------------------
     if args.env == "FrozenLake":
         custom_map = args.map or [
-            'FFFF',
+            'SFFF',
             'FHFH',
             'FFFH',
             'HFFG'
         ]
         if args.mode == "train":
-            frozenlake = FrozenLake(custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode)
-            frozenlake.batch_size = args.batch_size
-            frozenlake.n_episodes = args.n_episodes
-            frozenlake.max_steps = args.max_steps
-            print("Starting training...")
-            frozenlake.train(args.output_dir)
-            print(f"Training completed. Model saved to {args.output_dir}")
+            game = FrozenLake(args.algo, custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode, verbose=args.verbose)
+            game.batch_size = args.batch_size
+            game.n_episodes = args.n_episodes
+            game.max_steps = args.max_steps
+            game.train(args.output_dir)
         elif args.mode == "test":
             if not args.model_path:
                 raise ValueError("For testing, you must specify a --model_path")
-            frozenlake = FrozenLake(custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode)
-            frozenlake.max_steps = args.max_steps
-            print("Starting testing...")
-            frozenlake.test(args.model_path, test_episodes=args.test_episodes)
-            print("Testing completed.")
+            game = FrozenLake(args.algo, custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode, verbose=args.verbose)
+            game.max_steps = args.max_steps
+            game.test(args.model_path, test_episodes=args.test_episodes)
+    # ------------------------------
+    if args.env == "CartePole":
+        if args.mode == "train":
+            game = CartPole(args.algo, render_mode=args.render_mode, verbose=args.verbose)
+            game.batch_size = args.batch_size
+            game.n_episodes = args.n_episodes
+            game.max_steps = args.max_steps
+            game.train(args.output_dir)
+        elif args.mode == "test":
+            if not args.model_path:
+                raise ValueError("For testing, you must specify a --model_path")
+            game = CartPole(args.algo, custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode, verbose=args.verbose)
+            game.max_steps = args.max_steps
+            game.test(args.model_path, test_episodes=args.test_episodes)
     else:
         print(f"Environment '{args.env}' not supported.")
