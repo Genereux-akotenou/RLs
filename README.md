@@ -38,27 +38,22 @@ pip install -r requirements.txt
 1. Run a Predefined Scenario
 Execute an RL algorithm in a prebuilt gaming environment:
 ```bash
-python main.py --env "Maze" --algo "DQN"
+python main.py --env "FrozenLake" --algo "DQN" --mode "test" --model_path "prebuilt/frozenlake-v1/weights_0150.weights.h5" --test_episodes 3 --verbose "1"
 ```
 
-2. Visualize Training
-Enable real-time training visualizations:
+2. Training a DQN Agent in a FrozenLake Environment
 ```bash
-python main.py --env "Maze" --algo "DQN" --visualize True
+python main.py --env "FrozenLake" --algo "DQN" --mode "train" --output_dir "prebuilt/frozenlake-v1" \
+    --map "SFFF" "FHFH" "FFFH" "HFFG" --batch_size 32 --n_episodes 1000 --max_steps 300 --verbose "0"
 ```
 
-3. Training a DQN Agent in a Maze Environment
-```bash
-python main.py --env "Maze" --algo "DQN"
-```
-
-4. Comparing Algorithms
+3. Comparing Algorithms (comming)
 Run multiple agents for benchmarking:
 ```bash
 python benchmark.py --env "CustomGame" --algos "DQN PPO"
 ```
 
-5. Visualizing Results
+4. Visualizing Results (comming)
 Generate performance graphs:
 ```bash
 python visualize_results.py --log_dir "./logs/"
@@ -73,6 +68,6 @@ Contributions are welcome! Please follow these steps:
 ### License
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
-### Contact
+<!-- ### Contact
 For questions or suggestions, feel free to reach out:
--	Email: Mahouzonssou.AKOTENOU@um6p.ma
+-	Email: Mahouzonssou.AKOTENOU@um6p.ma -->
