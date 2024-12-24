@@ -19,11 +19,13 @@ This repository demonstrates the application of Reinforcement Learning (RL) algo
 ### Project Structure
 ```
 RLs/
+├── algorithms/          # Core RL algorithms (Q-Learning, DQL, etc.)
 ├── environments/        # Prebuilt gaming-style RL environments
-├── algorithms/          # Core RL algorithms (Q-Learning, PPO, etc.)
 ├── config/              # Configuration files for training and environments
-├── utils/               # Helper functions for metrics, visualization, etc.
+├── prebuilt/            # Store trained model utils
 ├── tests/               # Test scripts for validation
+├── utils/               # Helper functions for metrics, visualization, etc.
+├── x-samples/           # Examples
 └── main.py              # Main entry point for running experiments
 ```
 
@@ -38,13 +40,16 @@ pip install -r requirements.txt
 1. Run a Predefined Scenario
 Execute an RL algorithm in a prebuilt gaming environment:
 ```bash
-python main.py --env "FrozenLake" --algo "DQN" --mode "test" --model_path "prebuilt/frozenlake-v1/weights_0150.weights.h5" --test_episodes 3 --verbose "1"
+python main.py --env "FrozenLake" --algo "DQN" --mode "test" --test_episodes 3 --verbose "1"
+    --model_path "prebuilt/frozenlake-v1/weights_0150.weights.h5" \
+
 ```
 
 2. Training a DQN Agent in a FrozenLake Environment
 ```bash
-python main.py --env "FrozenLake" --algo "DQN" --mode "train" --output_dir "prebuilt/frozenlake-v1" \
-    --map "SFFF" "FHFH" "FFFH" "HFFG" --batch_size 32 --n_episodes 1000 --max_steps 300 --verbose "0"
+python main.py --env "FrozenLake" --algo "DQN" --mode "train" \
+    --output_dir "prebuilt/frozenlake-v1" --map "SFFF" "FHFH" "FFFH" "HFFG" \
+    --batch_size 32 --n_episodes 1000 --max_steps 300 --verbose "0"
 ```
 
 3. Comparing Algorithms (comming)
