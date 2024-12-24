@@ -13,7 +13,8 @@ class AgentFactory:
         if algorithm == "DQN":
             from algorithms import DQNAgent
             return DQNAgent(state_size, action_size, **kwargs)
-        elif algorithm == "XXX":
-            pass
+        elif algorithm == "QLearning":
+            from algorithms import QLearningAgent
+            return QLearningAgent(state_size, action_size, **kwargs)
         else:
             raise ValueError(f"Unsupported algorithm: {algorithm}")

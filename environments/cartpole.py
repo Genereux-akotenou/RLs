@@ -6,8 +6,8 @@ from config.agent_factory import AgentFactory
 from tqdm import tqdm
 
 class CartPole:
-    def __init__(self, algorithm, render_mode="human", verbose="0", **agent_kwargs):
-        self.env = gym.make('CartPole-v1')
+    def __init__(self, algorithm, render_mode="human", verbose=0, **agent_kwargs):
+        self.env = gym.make('CartPole-v1', )#render_mode=render_mode)
         self.env_test = gym.make('CartPole-v1', render_mode=render_mode)
         self.state_size = self.env.observation_space.shape[0]
         self.action_size = self.env.action_space.n
@@ -57,25 +57,25 @@ class CartPole:
         self.init_model_dir(output_dir)
         reward_list = []
 
-        for episode in tqdm(range(self.n_episodes), desc="Train ") if self.verbose == "0" else range(self.n_episodes):
+        for episode in tqdm(range(self.n_episodes), desc="Train ") if self.verbose == 0 else range(self.n_episodes):
             state = self.env.reset()[0]
             state = self.encode_state(state)
-            total_reward = 0
             done = False
 
             for t in range(self.max_steps):
                 action = self.agent.act(state)
                 new_state, reward, done, _, _ = self.env.step(action)
                 new_state = self.encode_state(new_state)
+                
+                #reward = -1 if done else 1
                 self.agent.add_memory(state, action, reward, new_state, done)
                 state = new_state
-                total_reward += reward
                 if done:
-                    if self.verbose == "1":
-                        print(f'Episode: {episode:4}/{self.n_episodes}\t step: {t:4}. Eps: {float(self.agent.epsilon):.2}, reward {reward}')
+                    if self.verbose == 1:
+                        print(f'Episode: {episode:4}/{self.n_episodes}\t step: {t:4}. Eps: {float(self.agent.epsilon):.2}')
                     break             
 
-            reward_list.append(total_reward)
+            reward_list.append(t)
             if len(self.agent.memory) > self.batch_size:
                 self.agent.train(self.batch_size, episode)
             if episode % 50 == 0:
@@ -92,13 +92,13 @@ class CartPole:
         self.agent.load(model_path)
         test_rewards = []
 
-        for episode in tqdm(range(test_episodes), desc="Test ") if self.verbose == "0" else range(test_episodes):
+        for episode in tqdm(range(test_episodes), desc="Test ") if self.verbose == 0 else range(test_episodes):
             state = self.env_test.reset()[0]
             state = self.encode_state(state)
             total_reward = 0
             done = False
 
-            if self.verbose == "1":
+            if self.verbose == 1:
                 print(f"******* EPISODE {episode + 1} *******")
             for step in range(self.max_steps):
                 action = self.agent.predict(state)
@@ -109,7 +109,7 @@ class CartPole:
 
                 self.env_test.render()
                 if done:
-                    if self.verbose == "1":
+                    if self.verbose == 1:
                         print(f"Episode Reward: {total_reward}")
                     break
 

@@ -15,11 +15,11 @@ if __name__ == "__main__":
     parser.add_argument("--test_episodes", type=int, default=3, help="Number of episodes for testing")
     parser.add_argument("--is_slippery", action="store_true", help="Enable slippery mode")
     parser.add_argument("--render_mode", type=str, default="human", help="Rendering mode, e.g., 'human', 'rgb_array'")
-    parser.add_argument("--verbose", type=str, default="1", choices=["0", "1"], help="Display logs")
-
+    parser.add_argument("--verbose", type=int, default=1, choices=[0, 1], help="Display logs")
+    parser.add_argument("--hole_position", type=int, nargs='+', help="List of integers representing the hole positions")
     args = parser.parse_args()
 
-    # ------------------------------
+    # --------------------------------------------------------------------------------
     if args.env == "FrozenLake":
         custom_map = args.map or [
             'SFFF',
@@ -28,7 +28,7 @@ if __name__ == "__main__":
             'HFFG'
         ]
         if args.mode == "train":
-            game = FrozenLake(args.algo, custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode, verbose=args.verbose)
+            game = FrozenLake(args.algo, custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode, verbose=args.verbose, hole_position=args.hole_position)
             game.batch_size = args.batch_size
             game.n_episodes = args.n_episodes
             game.max_steps = args.max_steps
@@ -36,11 +36,11 @@ if __name__ == "__main__":
         elif args.mode == "test":
             if not args.model_path:
                 raise ValueError("For testing, you must specify a --model_path")
-            game = FrozenLake(args.algo, custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode, verbose=args.verbose)
+            game = FrozenLake(args.algo, custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode, verbose=args.verbose, hole_position=args.hole_position)
             game.max_steps = args.max_steps
             game.test(args.model_path, test_episodes=args.test_episodes)
-    # ------------------------------
-    if args.env == "CartePole":
+    # --------------------------------------------------------------------------------
+    elif args.env == "CartPole":
         if args.mode == "train":
             game = CartPole(args.algo, render_mode=args.render_mode, verbose=args.verbose)
             game.batch_size = args.batch_size
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         elif args.mode == "test":
             if not args.model_path:
                 raise ValueError("For testing, you must specify a --model_path")
-            game = CartPole(args.algo, custom_map, is_slippery=args.is_slippery, render_mode=args.render_mode, verbose=args.verbose)
+            game = CartPole(args.algo, render_mode=args.render_mode, verbose=args.verbose)
             game.max_steps = args.max_steps
             game.test(args.model_path, test_episodes=args.test_episodes)
     else:

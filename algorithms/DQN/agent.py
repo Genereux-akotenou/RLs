@@ -88,3 +88,9 @@ class DQNAgent:
         
     def load(self, name):
         self.model.load_weights(name)
+
+    def generate_random_excluding(self, range_start, range_end, exclude_list):
+        valid_numbers = [num for num in range(range_start, range_end) if num not in exclude_list]
+        if not valid_numbers:
+            raise ValueError("No valid numbers available in the specified range.")
+        return random.choice(valid_numbers)
