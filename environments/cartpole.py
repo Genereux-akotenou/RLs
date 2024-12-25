@@ -13,7 +13,8 @@ class CartPole:
         self.action_size = self.env.action_space.n
         self.agent = AgentFactory.create_agent(algorithm, self.state_size, self.action_size, **agent_kwargs)
         self.verbose=verbose
-        
+        self.algorithm=algorithm
+
     @property
     def batch_size(self):
         return self._batch_size
@@ -53,36 +54,73 @@ class CartPole:
         return np.reshape(state, [1, self.state_size])
 
     def train(self, output_dir):
-        print("Starting training...")
-        self.init_model_dir(output_dir)
-        reward_list = []
+        if self.algorithm == "DQN":
+            print("Starting training...")
+            self.init_model_dir(output_dir)
+            reward_list = []
 
-        for episode in tqdm(range(self.n_episodes), desc="Train ") if self.verbose == 0 else range(self.n_episodes):
-            state = self.env.reset()[0]
-            state = self.encode_state(state)
-            done = False
+            for episode in tqdm(range(self.n_episodes), desc="Train ") if self.verbose == 0 else range(self.n_episodes):
+                state = self.env.reset()[0]
+                state = self.encode_state(state)
+                done = False
 
-            for t in range(self.max_steps):
-                action = self.agent.act(state)
-                new_state, reward, done, _, _ = self.env.step(action)
-                new_state = self.encode_state(new_state)
+                for t in range(self.max_steps):
+                    action = self.agent.act(state)
+                    new_state, reward, done, _, _ = self.env.step(action)
+                    new_state = self.encode_state(new_state)
+                    
+                    #reward = -1 if done else 1
+                    self.agent.add_memory(state, action, reward, new_state, done)
+                    state = new_state
+                    if done:
+                        if self.verbose == 1:
+                            print(f'Episode: {episode:4}/{self.n_episodes}\t step: {t:4}. Eps: {float(self.agent.epsilon):.2}')
+                        break             
+
+                reward_list.append(t)
+                if len(self.agent.memory) > self.batch_size:
+                    self.agent.train(self.batch_size, episode)
+                if episode % 50 == 0:
+                    self.agent.save(output_dir + f"weights_{episode:04d}.weights.h5")
+
+            print('Train mean % score =', round(100 * np.mean(reward_list), 1))
+            print(f"Training completed. Model saved to {output_dir}")
+        elif self.algorithm == "QLearning":
+            self.init_model_dir(output_dir)
+            rewards = []
+            for episode in tqdm(range(self.n_episodes), desc="QL-Train ") if self.verbose == 0 else range(self.n_episodes):
+                state = self.env.reset()[0]
+                # if self.hole_position != None:
+                #     state = self.agent.generate_random_excluding(0, self.state_size, self.hole_position)
+                #     self.env.unwrapped.s = state
+                total_reward = 0
+                done = False
+
+                for step in range(self.max_steps):
+                    # Choose an action a in the current world state (s)
+                    action = self.agent.act(state)
+                    # Take the action (a) and observe the outcome state(s') and reward (r)
+                    next_state, reward, done, _, _ = self.env.step(action)
+                    if done:
+                        reward = -1
+                    # Update Q(s,a):= Q(s,a) + lr [R(s,a) + gamma * max Q(s',a') - Q(s,a)]
+                    # qtable[new_state,:] : all the actions we can take from new state
+                    self.agent.update_q_table(state, action, reward, next_state)
+
+                    total_reward += reward
+                    state = next_state
+                    if done:
+                        if self.verbose == 1:
+                            print(f'Episode: {episode:4}/{self.n_episodes}\t step: {step:4}. Eps: {float(self.agent.epsilon):.2}, reward {total_reward}')
+                        break
                 
-                #reward = -1 if done else 1
-                self.agent.add_memory(state, action, reward, new_state, done)
-                state = new_state
-                if done:
-                    if self.verbose == 1:
-                        print(f'Episode: {episode:4}/{self.n_episodes}\t step: {t:4}. Eps: {float(self.agent.epsilon):.2}')
-                    break             
+                # Reduce epsilon (because we need less and less exploration)
+                self.agent.epsilon = self.agent.epsilon_min + (self.agent.epsilon_max - self.agent.epsilon_min)*np.exp(-self.agent.epsilon_decay*episode) 
+                rewards.append(total_reward)
 
-            reward_list.append(t)
-            if len(self.agent.memory) > self.batch_size:
-                self.agent.train(self.batch_size, episode)
-            if episode % 50 == 0:
-                self.agent.save(output_dir + f"weights_{episode:04d}.weights.h5")
-
-        print('Train mean % score =', round(100 * np.mean(reward_list), 1))
-        print(f"Training completed. Model saved to {output_dir}")
+            print ("Score over time: " +  str(sum(rewards)/self.n_episodes))
+            self.agent.save_q_table(output_dir + "q_table.npy")
+        
 
     def test(self, model_path, test_episodes=10):
         print("Starting testing...")

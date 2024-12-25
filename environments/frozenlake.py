@@ -107,6 +107,9 @@ class FrozenLake():
                     action = self.agent.act(state)
                     # Take the action (a) and observe the outcome state(s') and reward (r)
                     next_state, reward, done, _, _ = self.env.step(action)
+                    if self.hole_position != None:
+                        if next_state in self.hole_position:
+                            reward = -1
                     # Update Q(s,a):= Q(s,a) + lr [R(s,a) + gamma * max Q(s',a') - Q(s,a)]
                     # qtable[new_state,:] : all the actions we can take from new state
                     self.agent.update_q_table(state, action, reward, next_state)
