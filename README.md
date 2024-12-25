@@ -1,6 +1,6 @@
 ### RLs: Reinforcement Learning Algorithms in Gaming-Like Style
 
-<img src="utils/images/napkin-selection (9).png"/>
+<img src="utils/images/napkin-selection (10).png"/>
 
 This repository demonstrates the application of Reinforcement Learning (RL) algorithms in gaming-like scenarios, making learning RL intuitive, practical, and engaging.
 
