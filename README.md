@@ -2,7 +2,10 @@
 
 This repository demonstrates the application of Reinforcement Learning (RL) algorithms in gaming-like scenarios, making learning RL intuitive, practical, and engaging.
 
+<img src="utils/images/RLS-DECO.jpg"/>
+
 ---
+
 <img src="utils/images/napkin-selection (10).png"/>
 <img src="utils/images/napkin-selection (8).png"/>
 
@@ -58,13 +61,13 @@ python main.py --env "FrozenLake" --algo "DQN" --mode "train" \
 ```
 
 3. Comparing Algorithms (comming)
-Run multiple agents for benchmarking:
+<!-- Run multiple agents for benchmarking: -->
 ```bash
 python benchmark.py --env "CustomGame" --algos "DQN PPO"
 ```
 
 4. Visualizing Results (comming)
-Generate performance graphs:
+<!-- Generate performance graphs: -->
 ```bash
 python visualize_results.py --log_dir "./logs/"
 ```
