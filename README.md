@@ -39,9 +39,17 @@ RLs/
 
 ### Installation
 ```bash
+# Clone
 git clone https://github.com/Genereux-akotenou/RLs.git
 cd RLs
+
+# Create env
+python -m venv .rl_env
+source .rl_env/bin/activate
 pip install -r requirements.txt
+
+# Ready?
+# NB: Before you start a notebook in this project make sur to select as a kernel '.rl_env/bin/python'
 ```
 
 ### Examples
