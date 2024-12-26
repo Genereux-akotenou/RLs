@@ -5,3 +5,5 @@
 */.DS_Store
 games_ui
 x-samples/qln-sample.ipynb
+.rl_env/
+x-samples/test_results.png
