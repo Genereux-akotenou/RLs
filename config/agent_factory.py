@@ -16,5 +16,8 @@ class AgentFactory:
         elif algorithm == "QLearning":
             from algorithms import QLearningAgent
             return QLearningAgent(state_size, action_size, **kwargs)
+        elif algorithm == "SARSA":
+            from algorithms import SARSAAgent
+            return SARSAAgent(state_size, action_size, **kwargs)
         else:
             raise ValueError(f"Unsupported algorithm: {algorithm}")

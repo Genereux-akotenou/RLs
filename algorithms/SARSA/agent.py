@@ -16,13 +16,22 @@ class SARSAAgent:
         self.epsilon_min = epsilon_min
         self.epsilon_max = epsilon_max
         self.epsilon_decay = epsilon_decay
-        self.q_table = np.zeros((state_size, action_size))  # Q-table
+        self.q_table = np.ones((state_size, action_size))  # Q-table
+        self.q_table[5,:] = 0.0
+        self.q_table[7,:] = 0.0
+        self.q_table[11,:] = 0.0
+        self.q_table[12,:] = 0.0
+        self.q_table[15,:] = 0.0
 
     def act(self, state):
         """Choose an action based on epsilon-greedy policy."""
         if np.random.rand() <= self.epsilon:
             return random.randrange(self.action_size)  # Exploration
         return np.argmax(self.q_table[state, :])  # Exploitation
+
+    def update_q_table(self, state, action, reward, next_state, next_action):
+        """SARSA Q-value update."""
+        self.q_table[state, action] += self.learning_rate * (reward + self.gamma * self.q_table[next_state, next_action] - self.q_table[state, action])
 
     def update_q_table(self, state, action, reward, next_state, next_action):
         """SARSA Q-value update."""
@@ -37,6 +46,14 @@ class SARSAAgent:
             print(f"Q-table successfully saved to {output_path}.")
         except Exception as e:
             print(f"An error occurred while saving the Q-table: {e}")
+
+    def load(self, input_path):
+        """Load the Q-table from a file."""
+        try:
+            self.q_table = np.load(input_path)
+            print(f"Q-table successfully loaded from {input_path}.")
+        except Exception as e:
+            print(f"An error occurred while loading the Q-table: {e}")
 
     def predict(self, state):
         """Choose the best action based solely on the Q-table (pure exploitation)."""
@@ -68,6 +85,9 @@ if __name__ == "__main__":
         for step in range(max_steps):
             # Take the action and observe the next state and reward
             next_state, reward, done, _, _ = env.step(action)
+            #if next_state in [5, 7, 11, 12]:
+            #    reward = -0.1
+
             # Choose the next action based on the policy
             next_action = agent.act(next_state)
 

@@ -127,6 +127,41 @@ class FrozenLake():
 
             print ("Score over time: " +  str(sum(rewards)/self.n_episodes))
             self.agent.save_q_table(output_dir + "q_table.npy")
+        elif self.algorithm == "SARSA":
+            print('oooo')
+            self.init_model_dir(output_dir)
+            rewards = []
+            for episode in tqdm(range(self.n_episodes), desc="SARSA-Train ") if self.verbose == 0 else range(self.n_episodes):
+                state = self.env.reset()[0]
+                total_reward = 0
+                done = False
+
+                action = self.agent.act(state)
+
+                for step in range(self.max_steps):
+                    # Take the action and observe the next state and reward
+                    next_state, reward, done, _, _ = self.env.step(action)
+                    #if self.hole_position != None:
+                    #    if next_state in self.hole_position:
+                    #        reward = -1
+
+                    # Choose the next action based on the policy
+                    next_action = self.agent.act(next_state)
+
+                    # Update the Q-value using SARSA update rule
+                    self.agent.update_q_table(state, action, reward, next_state, next_action)
+
+                    total_reward += reward
+                    state, action = next_state, next_action
+
+                    if done:
+                        break
+
+            # Reduce epsilon (less exploration as we train more)
+            self.agent.epsilon = self.agent.epsilon_min + (self.agent.epsilon_max - self.agent.epsilon_min) * np.exp(-self.agent.epsilon_decay * episode)
+            rewards.append(total_reward)
+            print ("Score over time: " +  str(sum(rewards)/self.n_episodes))
+            self.agent.save_q_table(output_dir + "q_table.npy")
 
     def test(self, model_path, test_episodes=10):
         print("Starting testing...")
@@ -162,8 +197,7 @@ class FrozenLake():
             print(f"Test mean % score = {int(100 * np.mean(test_wins))}")
             print("Testing completed.")
             self.plot_results(test_wins)
-
-        elif self.algorithm == "QLearning":
+        elif self.algorithm in ["QLearning", "SARSA"]:
             if not os.path.exists(model_path):
                 raise FileNotFoundError(f"Model file not found: {model_path}")
             
